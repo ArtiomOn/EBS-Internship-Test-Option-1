@@ -3,7 +3,7 @@ from django.shortcuts import render
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
-from .serializers import TasksSerializer
+from .serializers import TasksSerializer, TasksListSerializer
 from .models import Tasks
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,7 +17,7 @@ class TasksListView(APIView):
 
     def get(self, request):
         tasks = Tasks.objects.all()
-        serializer = TasksSerializer(tasks, many=True)
+        serializer = TasksListSerializer(tasks, many=True)
         return Response(serializer.data)
 
     @swagger_auto_schema(request_body=TasksSerializer)
