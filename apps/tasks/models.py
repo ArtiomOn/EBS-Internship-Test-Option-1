@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class Tasks(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
-    status = models.BooleanField(default=False, verbose_name='Task done')
+    status = models.BooleanField(default=False, verbose_name='Completed')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_by')
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_to')
 

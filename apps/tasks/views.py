@@ -31,7 +31,7 @@ class TasksListView(APIView):
         return Response(serializer.errors)
 
 
-class TasksDetailView(APIView):
+class AllTasksDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
@@ -44,3 +44,23 @@ class TasksDetailView(APIView):
         instance = self.get_object(pk)
         serializer = TasksDetailSerializer(instance)
         return Response(serializer.data)
+
+
+class UsersTasksDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        tasks = Tasks.objects.filter(assigned_to=request.user)
+        serializer = TasksListSerializer(tasks, many=True)
+        return Response(serializer.data)
+
+
+class CompletedTasksListView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        tasks = Tasks.objects.filter(status=True)
+        serializer = TasksListSerializer(tasks, many=True)
+        return Response(serializer.data)
+
