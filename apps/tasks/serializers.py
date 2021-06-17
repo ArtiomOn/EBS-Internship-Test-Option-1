@@ -16,3 +16,9 @@ class TasksListSerializer(ModelSerializer):
     class Meta:
         model = Tasks
         fields = ('id', 'title')
+
+
+class TasksDetailSerializer(ModelSerializer):
+    class Meta:
+        model = Tasks
+        fields = ['id', 'title', 'description', 'assigned_to', 'created_by']
