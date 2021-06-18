@@ -1,13 +1,17 @@
+from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import render
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.models import User
-from .serializers import TasksSerializer, TasksListSerializer, TasksDetailSerializer
 from .models import Tasks
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from .serializers import (
+    TasksSerializer,
+    TasksListSerializer,
+    TasksDetailSerializer,
+    TasksUpdateSerializer
+)
 
 
 # Create your views here.
@@ -56,7 +60,6 @@ class UsersTasksDetailView(APIView):
 
 
 class CompletedTasksListView(APIView):
-
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -64,3 +67,19 @@ class CompletedTasksListView(APIView):
         serializer = TasksListSerializer(tasks, many=True)
         return Response(serializer.data)
 
+
+class AssignTaskUserDetailView(APIView):
+    def get_object(self, pk):
+        try:
+            return Tasks.objects.get(pk=pk)
+        except Tasks.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    @swagger_auto_schema(request_body=TasksUpdateSerializer)
+    def patch(self, request, pk):
+        instance = self.get_object(pk)
+        serializer = TasksUpdateSerializer(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save(assigned_to=request.user)
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

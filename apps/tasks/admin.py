@@ -7,4 +7,4 @@ from .models import Tasks
 
 @admin.register(Tasks)
 class TasksAdmin(admin.ModelAdmin):
-    list_display = ['id','title', 'description', 'status', 'created_by', 'assigned_to']
+    list_display = ['id', 'title', 'description', 'status', 'created_by', 'assigned_to']
