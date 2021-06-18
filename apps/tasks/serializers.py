@@ -28,3 +28,9 @@ class TasksUpdateSerializer(ModelSerializer):
     class Meta:
         model = Tasks
         fields = ['assigned_to']
+
+
+class TasksUpdateStatusSerializer(ModelSerializer):
+    class Meta:
+        model = Tasks
+        fields = ['status']

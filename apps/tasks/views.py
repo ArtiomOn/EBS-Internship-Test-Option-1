@@ -10,7 +10,8 @@ from .serializers import (
     TasksSerializer,
     TasksListSerializer,
     TasksDetailSerializer,
-    TasksUpdateSerializer
+    TasksUpdateSerializer,
+    TasksUpdateStatusSerializer
 )
 
 
@@ -81,5 +82,22 @@ class AssignTaskUserDetailView(APIView):
         serializer = TasksUpdateSerializer(instance, data=request.data)
         if serializer.is_valid():
             serializer.save(assigned_to=request.user)
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateTaskStatusDetailView(APIView):
+    def get_object(self, pk):
+        try:
+            return Tasks.objects.get(pk=pk)
+        except Tasks.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    @swagger_auto_schema(request_body=TasksUpdateStatusSerializer)
+    def patch(self, request, pk):
+        instance = self.get_object(pk)
+        serializer = TasksUpdateStatusSerializer(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
             return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
