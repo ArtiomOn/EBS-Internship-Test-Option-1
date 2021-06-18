@@ -1,5 +1,4 @@
 from rest_framework.serializers import ModelSerializer
-from rest_framework import serializers
 from .models import Tasks
 
 
@@ -24,10 +23,16 @@ class TasksDetailSerializer(ModelSerializer):
         fields = ('id', 'title', 'description', 'assigned_to', 'created_by')
 
 
-class TasksUpdateSerializer(ModelSerializer):
+class TasksUpdateAssignedUserSerializer(ModelSerializer):
     class Meta:
         model = Tasks
         fields = ['assigned_to']
+
+
+class TasksUpdateOwnerUserSerializer(ModelSerializer):
+    class Meta:
+        model = Tasks
+        fields = ['created_by']
 
 
 class TasksUpdateStatusSerializer(ModelSerializer):

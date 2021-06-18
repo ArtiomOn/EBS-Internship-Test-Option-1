@@ -5,7 +5,8 @@ from .views import (
     UsersTasksDetailView,
     CompletedTasksListView,
     AssignTaskUserDetailView,
-    UpdateTaskStatusDetailView
+    UpdateTaskStatusDetailView,
+    AssignTaskUserOwnerDetailView
 )
 
 urlpatterns = [
@@ -13,6 +14,7 @@ urlpatterns = [
     path('tasks/<int:pk>/', AllTasksDetailView.as_view()),
     path('tasks/users/', UsersTasksDetailView.as_view()),
     path('tasks/done/', CompletedTasksListView.as_view()),
-    path('update/<int:pk>/', AssignTaskUserDetailView.as_view()),
-    path('update/status/<int:pk>/', UpdateTaskStatusDetailView.as_view())
+    path('update/user/assigned/<int:pk>/', AssignTaskUserDetailView.as_view()),
+    path('update/status/<int:pk>/', UpdateTaskStatusDetailView.as_view()),
+    path('update/user/owner/<int:pk>/', AssignTaskUserOwnerDetailView.as_view())
 ]

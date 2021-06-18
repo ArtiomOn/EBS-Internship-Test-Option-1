@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.http import HttpResponse
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -10,8 +9,9 @@ from .serializers import (
     TasksSerializer,
     TasksListSerializer,
     TasksDetailSerializer,
-    TasksUpdateSerializer,
-    TasksUpdateStatusSerializer
+    TasksUpdateAssignedUserSerializer,
+    TasksUpdateStatusSerializer,
+    TasksUpdateOwnerUserSerializer
 )
 
 
@@ -50,6 +50,11 @@ class AllTasksDetailView(APIView):
         serializer = TasksDetailSerializer(instance)
         return Response(serializer.data)
 
+    def delete(self, request, pk):
+        instance = self.get_object(pk)
+        instance.delete()
+        return Response(status=status.HTTP_200_OK)
+
 
 class UsersTasksDetailView(APIView):
     permission_classes = [IsAuthenticated]
@@ -76,12 +81,12 @@ class AssignTaskUserDetailView(APIView):
         except Tasks.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    @swagger_auto_schema(request_body=TasksUpdateSerializer)
+    @swagger_auto_schema(request_body=TasksUpdateAssignedUserSerializer)
     def patch(self, request, pk):
         instance = self.get_object(pk)
-        serializer = TasksUpdateSerializer(instance, data=request.data)
+        serializer = TasksUpdateAssignedUserSerializer(instance, data=request.data)
         if serializer.is_valid():
-            serializer.save(assigned_to=request.user)
+            serializer.save(user=request.user)
             return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -99,5 +104,22 @@ class UpdateTaskStatusDetailView(APIView):
         serializer = TasksUpdateStatusSerializer(instance, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AssignTaskUserOwnerDetailView(APIView):
+    def get_object(self, pk):
+        try:
+            return Tasks.objects.get(pk=pk)
+        except Tasks.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    @swagger_auto_schema(request_body=TasksUpdateOwnerUserSerializer)
+    def patch(self, request, pk):
+        instance = self.get_object(pk)
+        serializer = TasksUpdateOwnerUserSerializer(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
             return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
