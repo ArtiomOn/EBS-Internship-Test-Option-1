@@ -1,19 +1,32 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 
-# Create your models here.
+User = get_user_model()
 
-class Tasks(models.Model):
+
+class Task(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
     status = models.BooleanField(default=False, verbose_name='Completed')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_by')
-    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_to')
+    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='task_assigned')
 
     def __str__(self):
-        return f'{self.title}, {self.description}, {self.created_by}, {self.assigned_to}'
+        return f'{self.title}, {self.description}, {self.assigned_to}'
 
     class Meta:
         verbose_name = 'Tasks'
         verbose_name_plural = 'Tasks'
+
+
+class Comment(models.Model):
+    content = models.TextField()
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
+
+    def __str__(self):
+        return self.content
+
+    class Meta:
+        verbose_name = 'Comments'
+        verbose_name_plural = 'Comments'
+

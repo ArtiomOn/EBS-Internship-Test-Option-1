@@ -1,20 +1,22 @@
 from django.urls import path
+
 from .views import (
-    TasksListView,
-    AllTasksDetailView,
-    UsersTasksDetailView,
+    TaskCreateView,
+    TaskDetailView,
+    CurrentUserTasksDetailView,
     CompletedTasksListView,
-    AssignTaskUserDetailView,
-    UpdateTaskStatusDetailView,
-    AssignTaskUserOwnerDetailView
+    TaskUpdateAssignedUserDetailView,
+    TaskUpdateStatusDetailView,
+    CommentsDetailView
 )
 
 urlpatterns = [
-    path('tasks/', TasksListView.as_view()),
-    path('tasks/<int:pk>/', AllTasksDetailView.as_view()),
-    path('tasks/users/', UsersTasksDetailView.as_view()),
-    path('tasks/done/', CompletedTasksListView.as_view()),
-    path('update/user/assigned/<int:pk>/', AssignTaskUserDetailView.as_view()),
-    path('update/status/<int:pk>/', UpdateTaskStatusDetailView.as_view()),
-    path('update/user/owner/<int:pk>/', AssignTaskUserOwnerDetailView.as_view())
+    path('task/', TaskCreateView.as_view()),
+    path('task/user/', CurrentUserTasksDetailView.as_view()),
+    path('task/completed/', CompletedTasksListView.as_view()),
+
+    path('task/detail/<int:pk>/', TaskDetailView.as_view()),
+    path('task/user/assigned/<int:pk>/', TaskUpdateAssignedUserDetailView.as_view()),
+    path('task/update/status/<int:pk>/', TaskUpdateStatusDetailView.as_view()),
+    path('task/comments/<int:pk>/', CommentsDetailView.as_view())
 ]

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     'apps.common',
+    'apps.users',
     'apps.tasks',
 ]
 
@@ -136,3 +137,5 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+AUTH_USER_MODEL = 'users.CustomUser'

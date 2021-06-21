@@ -1,10 +1,13 @@
 from django.contrib import admin
-from .models import Tasks
 
-# Register your models here.
-#admin.site.register(Tasks)
+from apps.tasks.models import Task, Comment
 
 
-@admin.register(Tasks)
+@admin.register(Task)
 class TasksAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'description', 'status', 'created_by', 'assigned_to']
+    list_display = ('id', 'title', 'description', 'status', 'assigned_to')
+
+
+@admin.register(Comment)
+class CommentsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'content')

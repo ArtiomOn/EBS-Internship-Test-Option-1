@@ -1,41 +1,49 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Tasks
+
+from apps.tasks.models import Task, Comment
 
 
-class TasksSerializer(ModelSerializer):
+class TaskCreateSerializer(ModelSerializer):
     class Meta:
-        model = Tasks
-        fields = ('id', 'title', 'description', 'assigned_to', 'created_by')
+        model = Task
+        fields = ('id', 'title', 'description', 'assigned_to', 'assigned_to')
         extra_kwargs = {
-            'created_by': {'read_only': True}
+            'assigned_to': {'read_only': True}
         }
 
 
-class TasksListSerializer(ModelSerializer):
+class TaskDetailSerializer(ModelSerializer):
     class Meta:
-        model = Tasks
+        model = Task
+        fields = ('id', 'title', 'description', 'status', 'assigned_to')
+
+
+# And we use this serializer to find tasks status
+class TaskCurrentUserSerializer(ModelSerializer):
+    class Meta:
+        model = Task
         fields = ('id', 'title')
 
 
-class TasksDetailSerializer(ModelSerializer):
+class TaskUpdateAssignedUserSerializer(ModelSerializer):
     class Meta:
-        model = Tasks
-        fields = ('id', 'title', 'description', 'assigned_to', 'created_by')
+        model = Task
+        fields = ('assigned_to',)
 
 
-class TasksUpdateAssignedUserSerializer(ModelSerializer):
+class TaskUpdateStatusSerializer(ModelSerializer):
     class Meta:
-        model = Tasks
-        fields = ['assigned_to']
+        model = Task
+        fields = ('status',)
 
 
-class TasksUpdateOwnerUserSerializer(ModelSerializer):
+class CreateCommentSerializer(ModelSerializer):
     class Meta:
-        model = Tasks
-        fields = ['created_by']
+        model = Comment
+        fields = ('id', 'content')
 
 
-class TasksUpdateStatusSerializer(ModelSerializer):
+class AllCommentsSerializer(ModelSerializer):
     class Meta:
-        model = Tasks
-        fields = ['status']
+        model = Comment
+        fields = ('content',)
