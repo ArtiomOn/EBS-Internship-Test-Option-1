@@ -34,9 +34,6 @@ class UserRegisterView(GenericAPIView):
 
         refresh = RefreshToken.for_user(user)
 
-        # if api_settings.UPDATE_LAST_LOGIN:
-        #     update_last_login(None, user)
-
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token)
