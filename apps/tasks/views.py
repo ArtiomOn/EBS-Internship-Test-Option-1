@@ -1,12 +1,13 @@
 from django.core.mail import send_mail
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework import filters
 
-from apps.tasks.models import Task
+from apps.tasks.models import Task, Comment
 from django.conf import settings
 from apps.tasks.serializers import (
     TaskCreateSerializer,
@@ -17,6 +18,20 @@ from apps.tasks.serializers import (
     CreateCommentSerializer,
     AllCommentsSerializer
 )
+
+
+class TaskFilterListView(generics.ListAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskDetailSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['^id', '^title', '^description', '^status']
+
+
+class CommentFilterListView(generics.ListAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CreateCommentSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['^id', '^content']
 
 
 class TaskCreateView(APIView):
@@ -93,12 +108,11 @@ class TaskUpdateStatusDetailView(APIView):
     @swagger_auto_schema(request_body=TaskUpdateStatusSerializer)
     def patch(self, request, pk):
         instance = get_object_or_404(Task, pk=pk)
-        serializer = TaskUpdateStatusSerializer(data=request.data)
+        serializer = TaskUpdateStatusSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
-        status = serializer.data.get('status')
-        instance.save()
+        serializer.save()
         self.send_task_completed_email(instance.id, instance.assigned_to.email)
-        return Response(status)
+        return Response(status=status.HTTP_200_OK)
 
     @classmethod
     def send_task_completed_email(cls, task_id, user_email):
@@ -119,9 +133,9 @@ class CommentsDetailView(APIView):
         instance = get_object_or_404(Task, pk=pk)
         serializer = CreateCommentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        instance.save()
+        serializer.save(task=instance)
         self.send_task_commented_email(instance.id, instance.assigned_to.email)
-        return Response(status=status.HTTP_200_OK)
+        return Response(serializer.data)
 
     @classmethod
     def send_task_commented_email(cls, task_id, user_email):

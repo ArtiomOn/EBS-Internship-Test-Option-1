@@ -7,10 +7,14 @@ from .views import (
     CompletedTasksListView,
     TaskUpdateAssignedUserDetailView,
     TaskUpdateStatusDetailView,
-    CommentsDetailView
+    CommentsDetailView,
+    TaskFilterListView,
+    CommentFilterListView
 )
 
 urlpatterns = [
+    path('task/search/', TaskFilterListView.as_view()),
+    path('task/comment/search/', CommentFilterListView.as_view()),
     path('task/', TaskCreateView.as_view()),
     path('task/user/', CurrentUserTasksDetailView.as_view()),
     path('task/completed/', CompletedTasksListView.as_view()),
