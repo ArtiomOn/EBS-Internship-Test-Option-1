@@ -6,7 +6,10 @@ coreapi==2.3.3
 coreschema==0.0.4
 Django==3.2.4
 django-environ==0.4.5
+django-filter==1.1.0
+django-utils-six==2.0
 djangorestframework==3.12.4
+djangorestframework-filters==0.11.1
 djangorestframework-simplejwt==4.7.1
 drf-spectacular==0.17.2
 drf-util==0.0.29
@@ -19,6 +22,7 @@ Jinja2==3.0.1
 jsonschema==3.2.0
 MarkupSafe==2.0.1
 packaging==20.9
+psycopg2==2.9.1
 PyJWT==2.1.0
 pyparsing==2.4.7
 pyrsistent==0.17.3

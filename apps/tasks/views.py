@@ -108,7 +108,7 @@ class TaskUpdateStatusDetailView(APIView):
     @swagger_auto_schema(request_body=TaskUpdateStatusSerializer)
     def patch(self, request, pk):
         instance = get_object_or_404(Task, pk=pk)
-        serializer = TaskUpdateStatusSerializer(instance, data=request.data)
+        serializer = TaskUpdateStatusSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         self.send_task_completed_email(instance.id, instance.assigned_to.email)
