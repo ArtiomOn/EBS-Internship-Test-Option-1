@@ -5,13 +5,13 @@ RUN apt-get install -y curl wget git
 RUN apt-get -y autoremove
 
 # Creating Application Source Code Directory
-RUN mkdir -p /usr/app
+RUN mkdir -p /usr/apps
 
 # Setting Home Directory for containers
-WORKDIR /usr/app
+WORKDIR /usr/apps
 
 # Installing python depencies
-COPY . /usr/app
+COPY . /usr/apps
 RUN python -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn
